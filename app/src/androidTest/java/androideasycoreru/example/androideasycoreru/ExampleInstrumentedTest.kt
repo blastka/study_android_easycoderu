@@ -1,4 +1,4 @@
-package com.example.androideasycoreru
+package androideasycoreru.example.androideasycoreru
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

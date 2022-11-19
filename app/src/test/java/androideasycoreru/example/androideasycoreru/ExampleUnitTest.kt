@@ -1,4 +1,4 @@
-package com.example.androideasycoreru
+package androideasycoreru.example.androideasycoreru
 
 import org.junit.Test
 
