@@ -36,8 +36,17 @@ internal class ModelTest{
         val savedCountActual = testDataSource.getInt("")
         val savedCountExpected = 2
         assertEquals(savedCountExpected, savedCountActual)
+
+        model.start(callback)
+        timeTicker.tick(3)
+        val actualText = callback.text
+        val expectedText = "15"
+        assertEquals(expectedText, actualText)
     }
 
+    /**
+     * Нужен тест при смерти приложения
+     */
     private class TestCallback: TextCallback{
         var text = ""
         override fun updateText(str: String) {
