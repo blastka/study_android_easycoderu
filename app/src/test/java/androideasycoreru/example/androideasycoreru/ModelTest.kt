@@ -6,84 +6,56 @@ import org.junit.Test
 internal class ModelTest{
 
     @Test
-    fun test_start_with_saved_value(){
+    fun start_model(){
+        //нужно создать нашу model
         val testDataSource = TestDataSource()
-        val timeTicker = TestTimerTicker()
-        val model = Model(testDataSource, timeTicker)
-        val callback = TestCallback()
-        testDataSource.saveInt("", 5)
-        model.start(callback)
-        timeTicker.tick(1)
-        val actual = callback.text
-        val expected = "6"
-        assertEquals(expected, actual)
+        val testTimeTicker = TestTimeTicker()
+        val model = Model(testDataSource, testTimeTicker)
+        val textCallback = TestTextCallback()
+        model.start(textCallback)
     }
 
-    @Test
-    fun test_stop_after_2_seconds(){
-        val testDataSource = TestDataSource()
-        val timeTicker = TestTimerTicker()
-        val model = Model(testDataSource, timeTicker)
-        val callback = TestCallback()
-        testDataSource.saveInt("", 0)
-        model.start(callback)
-        timeTicker.tick(2)
-        val actual = callback.text
-        val expected = "2"
-        assertEquals(expected, actual)
-
-        model.stop()
-        val savedCountActual = testDataSource.getInt("")
-        val savedCountExpected = 2
-        assertEquals(savedCountExpected, savedCountActual)
-
-        model.start(callback)
-        timeTicker.tick(3)
-        val actualText = callback.text
-        val expectedText = "15"
-        assertEquals(expectedText, actualText)
-    }
-
-    /**
-     * Нужен тест при смерти приложения
-     */
-    private class TestCallback: TextCallback{
-        var text = ""
-        override fun updateText(str: String) {
-            text = str
-        }
-    }
-
-    private class TestDataSource: DataSource{
-        private var int: Int = Int.MIN_VALUE
+    //две тестовые реализации входящих аргументов
+    //на datasourse
+    //какое-то значение получить нужно не существующее
+    class TestDataSource : DataSource{
+        private var int = Int.MIN_VALUE
+        //приходящее сохранить
         override fun saveInt(key: String, value: Int) {
             int = value
         }
-
+        //его же получить
         override fun getInt(key: String): Int {
             return int
         }
 
     }
 
-    private class TestTimerTicker: TimeTicker {
 
-        private var callback: TimeTicker.Callback? = null
+    //на таймер
+    class TestTimeTicker: TimeTicker{
+        var callback: TimeTicker.Callback? = null
         var state = 0
-
+    //заменяем реализацию методов
         override fun start(callback: TimeTicker.Callback, period: Long) {
             this.callback = callback
-            state = 1
+            state = 1 //а почему 1?
         }
 
         override fun stop() {
             callback = null
             state = -1
         }
+    }
 
-        fun tick(times: Int){
-            for (i in 0 until times)
-                callback?.tick()
+    //и так как в модели текстовый колбэк, его реализацию тоже нужно заменить
+    class TestTextCallback : TextCallback{
+        //сначала будет пустая
+        var text = ""
+        //присваиваем
+        override fun updateText(str: String) {
+            text = str
         }
+
     }
 }

@@ -12,7 +12,6 @@ class ViewModel(private val model: Model) {
         override fun updateText(str: String) {
             textObservable?.postValue(str)
         }
-
     }
 
     fun init(textObservable: TextObservable){
